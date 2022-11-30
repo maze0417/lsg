@@ -1,0 +1,222 @@
+﻿<!doctype html>
+<html lang="en">
+
+<head>
+    <style>
+        select {
+            padding: 10px;
+        }
+
+        [type="button"] {
+            margin-top: 5px;
+            padding: 10px;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+<div class="wrapper fadeInDown">
+    <div id="formContent">
+
+        <form>
+            <div>Player登入
+
+                <select id="username">
+                    <option>RD_YP01</option>
+                    <option>RD_YP02</option>
+                    <option>RD_YP03</option>
+                    <option>RD_YP04</option>
+                    <option>RD_YP05</option>
+                    <option>HTTW11</option>
+                    <option>HTTW12</option>
+                    <option>YP_LYMSG_001</option>
+                    <option>YP_LYMSG_002</option>
+                    <option>YP_LYMSG_003</option>
+                    <option>YP_LYMSG_004</option>
+                    <option>YP_LYMSG_005</option>
+                </select>
+            </div>
+
+            <div>
+                使用 Prod 视讯:
+                <input type="checkbox"
+                       id="mock-video"
+                       checked>
+            </div>
+            <div>
+                另開分頁:
+                <input type="checkbox"
+                       id="use-opener"
+                       checked>
+            </div>
+            <div><input type="button"
+                        id="loginToFish"
+                        class="fadeIn fourth"
+                        value="夢幻捕魚"></div>
+            <div><input type="button"
+                        id="loginToDsg"
+                        class="fadeIn fourth"
+                        value="斗三公"></div>
+
+        </form>
+        <hr>
+        <div>Anchor登入
+            <select id="anchorname">
+                <option>Candice</option>
+                <option>Happy</option>
+                <option>Momo</option>
+                <option>Jiajia</option>
+                <option>Alina</option>
+                <option>Connie</option>
+                <option>Nina</option>
+            </select>
+        </div>
+        <div><input type="button"
+                    id="loginToAnchor"
+                    class="fadeIn fourth"
+                    value="新主播后台登入"></div>
+
+    </div>
+</div>
+<script>
+    // 前台登入
+    loginToFish.onclick = function () {
+        var username = document.getElementById("username");
+        callAjax('fish', username);
+    };
+    loginToDsg.onclick = function () {
+        var username = document.getElementById("username");
+        callAjax('dsg', username);
+    };
+
+    // 後台登入
+    loginToAnchor.onclick = function () {
+        var username = document.getElementById("anchorname");
+        callAjax('', username, true);
+    };
+
+
+    function callAjax(callbackRoutePath, username, toAnchorConsole) {
+        // 依據登入平台變更 Port
+        var host = window.location.hostname;
+        var isLocal = isLocalUrl(host);
+        var isUat = isUatUrl(host);
+        var anchorUrl = isUat ? "uatanchor.mbs6888.com" : "anchor.gjsoft.cc";
+        var hostUrl = isLocal ?
+            toAnchorConsole ? `${window.location.protocol}//${window.location.hostname}:8004` : `${window.location.protocol}//${window.location.hostname}:8002`
+            :
+            toAnchorConsole ? `${window.location.protocol}//${anchorUrl}` : `${window.location.protocol}//${window.location.hostname}`
+
+        var url = "api/games/fish/demo/" + username.value;
+        var param = {
+                url: url,
+                type: 'get',
+                dataType: 'json',
+                success: function (data) {
+                    console.log("res:" + data);
+                    var res = JSON.parse(data);
+
+                    if (toAnchorConsole && !res.Tss) {
+                        alert('tss undefined error!')
+                        return;
+                    }
+
+
+                    var url =
+                        `${hostUrl}/${callbackRoutePath}` +
+                        '?token=' + res.Token +
+                        `${isMockVideoChecked() ? '&mockVideo=true' : ''}` +
+                        '&username=' + res.UserName +
+                        '&pid=' + res.Pid +
+                        '&lobbyUrl=' + window.location.href +
+                        '&currency=' + res.Currency +
+                        '&lang=' + res.Lang +
+                        '&anchorId=' + res.AnchorId +
+                        '&userFlag=' + res.UserFlag +
+                        '&level=' + res.Level +
+                        '&src_platform=' + res.SourcePlatform +
+                        '&tss=' + res.Tss +
+                        '&origin=' + res.Origin
+                    ;
+                    if (useWinOpen()) {
+                        var win = window.open(url, '_blank');
+                        win.focus();
+                    } else {
+                        window.location.href = url;
+                    }
+                }
+
+            }
+        ;
+        ajax(param);
+    }
+
+    function isLocalUrl(host) {
+        const urlList = ['localhost', '192.168', 'local', '172.24', 'host.docker.internal'];
+        return urlList.some(function (v) {
+            return host.includes(v);
+        });
+    }
+
+    function isUatUrl(host) {
+        const urlList = ['uatfront.mbs6888.com'];
+        return urlList.some(function (v) {
+            return host.includes(v);
+        });
+    }
+
+    function isMockVideoChecked() {
+        return document.getElementById('mock-video').checked;
+    }
+
+    function useWinOpen() {
+        return document.getElementById('use-opener').checked;
+    }
+
+    function ajax(data) {
+        var ajax = null;
+        if (window.XMLHttpRequest) {
+            ajax = new XMLHttpRequest();
+        } else {
+            ajax = new ActiveXObject();
+        }
+        var type = data.type == 'get' ? 'get' : 'post';
+
+        var flag = data.asyn == 'true' ? 'true' : 'false';
+
+        // var port = "";
+        // if (window.location.hostname === "localhost" || window.location.hostname === "host.docker.internal")
+        //     port = ":8002";
+        // var url = "http://" + window.location.hostname + port + "/" + data.url;
+        var url = data.url;
+        ajax.open(type, url, flag);
+        console.log("url:  " + url);
+        if (type == 'get') {
+            ajax.send(null);
+        } else if (type == 'post') {
+            ajax.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            ajax.send(data.data);
+        }
+        ajax.onreadystatechange = function () {
+            if (this.readyState == 4) {
+                if (this.status == 200) {
+                    if (typeof data.success == 'function') {
+                        var d = data.dataType == 'xml' ? ajax.responseXML : ajax.responseText;
+                        data.success(d);
+                    }
+                } else {
+                    if (typeof data.failure == 'function') {
+                        data.failure();
+                    }
+                }
+            }
+            if (this.status !== 200) {
+                alert("http code :" + this.status + " response: " + this.responseText)
+            }
+        }
+    }
+</script>
+</body>
+
+</html>

@@ -1,0 +1,38 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<AssemblyName>LSG.Infrastructure.DataServices</AssemblyName>
+		<RootNamespace>LSG.Infrastructure.DataServices</RootNamespace>
+		
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\Core\Entities\Entities.csproj" />
+		<ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+	</ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="EFCore.BulkExtensions" Version="6.5.6" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.0">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.0" />
+		<PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="7.0.0-alpha.1" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="SqlScripts\Sp\sp_GetSchema.sql" />
+		<None Remove="DataInitializers\Games\GenericPlatform.csv" />
+		<None Remove="SqlScripts\ReportTables\LiveFishScene.sql" />
+
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="Commands" />
+		<Folder Include="Migrations" />
+	</ItemGroup>
+
+</Project>

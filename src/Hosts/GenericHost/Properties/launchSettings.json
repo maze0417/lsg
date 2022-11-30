@@ -1,0 +1,40 @@
+﻿{
+  "profiles": {
+    "Migration": {
+      "commandName": "Project",
+      "launchBrowser": false,
+      "applicationUrl": "http://localhost:8001/;http://host.docker.internal:8001/",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "commandLineArgs": "--site lsgapi -m"
+    },
+    "LsgApi": {
+      "commandName": "Project",
+      "launchBrowser": false,
+      "applicationUrl": "http://localhost:8001/;http://host.docker.internal:8001/",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "commandLineArgs": "--site lsgapi"
+    },
+    "LsgFrontend": {
+      "commandName": "Project",
+      "launchBrowser": false,
+      "applicationUrl": "http://localhost:8002;http://host.docker.internal:8002",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "commandLineArgs": "--site lsgfrontend"
+    },
+    "LoggerWorker": {
+      "commandName": "Project",
+      "launchBrowser": false,
+      "applicationUrl": "http://localhost:8003/;http://host.docker.internal:8003/",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "commandLineArgs": "--site LoggerWorker"
+    }
+  }
+}

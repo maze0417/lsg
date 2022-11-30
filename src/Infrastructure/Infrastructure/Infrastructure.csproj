@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <AssemblyName>LSG.Infrastructure</AssemblyName>
+        <RootNamespace>LSG.Infrastructure</RootNamespace>
+
+        <NoWarn>$(NoWarn);EF1001</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="FluentValidation.AspNetCore" Version="11.2.2" />
+        <PackageReference Include="Microsoft.IO.RecyclableMemoryStream" Version="2.2.1" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="6.4.0" />
+
+
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\Core\Core\Core.csproj" />
+        <ProjectReference Include="..\..\Core\Entities\Entities.csproj" />
+        <ProjectReference Include="..\..\SharedKernel\SharedKernel\SharedKernel.csproj" />
+    </ItemGroup>
+</Project>

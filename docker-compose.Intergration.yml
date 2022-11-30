@@ -1,0 +1,100 @@
+version: '3.5'
+
+services:
+  lsgapi:
+    image: lsghost:${APP_ENV:-integration}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    networks:
+      - internal
+    ports:
+      - 8001:80
+    entrypoint: [ "dotnet", "LSG.Hosts.GenericHost.dll","--site","LsgApi" ]
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${APP_ENV:-integration}
+      ASPNETCORE_SERVERNAME: ${APP_SERVER:-integration}
+      TZ: ${TIMEZONE:-Asia/Taipei}
+  loggerworker:
+    image: lsghost:${APP_ENV:-integration}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 8003:80
+    depends_on:
+      - db
+      - redis
+      - nats
+    networks:
+      - internal
+    entrypoint: [ "dotnet", "LSG.Hosts.GenericHost.dll","--site","loggerworker" ]
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${APP_ENV:-integration}
+      ASPNETCORE_SERVERNAME: ${APP_SERVER:-integration}
+      TZ: ${TIMEZONE:-Asia/Taipei}
+  lsgfrontend:
+    image: lsghost:${APP_ENV:-integration}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    
+    ports:
+      - 8002:80
+    networks:
+      - internal
+    entrypoint: [ "dotnet", "LSG.Hosts.GenericHost.dll","--site","lsgfrontend" ]
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${APP_ENV:-integration}
+      ASPNETCORE_SERVERNAME: ${APP_SERVER:-integration}
+      TZ: ${TIMEZONE:-Asia/Taipei}
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELK_VERSION:-8.3.2}
+    container_name: elk
+    environment:
+      - discovery.type=single-node
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - ELASTIC_USERNAME=root
+      - ELASTIC_PASSWORD=root
+      - xpack.security.enabled=false
+      - xpack.security.transport.ssl.enabled=false
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    networks:
+      - internal
+    restart: always
+  kibana:
+    image: docker.elastic.co/kibana/kibana:${ELK_VERSION:-8.3.2}
+    container_name: kibana
+    ports:
+      - "5601:5601"
+    restart: always
+    networks:
+      - internal
+    environment:
+      ELASTICSEARCH_HOSTS: http://elk:9200
+  #      I18N_LOCALE: zh-CN
+  nats:
+    container_name: nats
+    image: nats:latest
+    restart: always
+    networks:
+      - internal
+  redis:
+    container_name: redis
+    image: redis:latest
+    restart: always
+    networks:
+      - internal
+networks:
+  internal:
+    name: ${NETWORKS:-lsg_internal}
+    driver: bridge
+  
+

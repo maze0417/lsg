@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <RootNamespace>LSG.IntegrationTests</RootNamespace>
+        <AssemblyName>LSG.IntegrationTests</AssemblyName>
+        <IsPackable>false</IsPackable>
+    </PropertyGroup>
+    <ItemGroup>
+        <AssemblyAttribute Include="NUnit.Framework.CategoryAttribute">
+            <_Parameter1>Integration</_Parameter1>
+        </AssemblyAttribute>
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="AutoFixture" Version="4.17.0" />
+        <PackageReference Include="Docker.DotNet" Version="3.125.12" />
+        <PackageReference Include="FluentAssertions" Version="6.8.0" />
+        <PackageReference Include="Microsoft.AspNetCore.SignalR.Client" Version="7.0.0" />
+        <PackageReference Include="NSubstitute" Version="4.4.0" />
+        <PackageReference Include="nunit" Version="3.13.3" />
+        <PackageReference Include="NUnit3TestAdapter" Version="4.3.1" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.4.0" />
+        <PackageReference Include="TeamCity.VSTest.TestAdapter" Version="1.0.36" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\Core\Core\Core.csproj" />
+        <ProjectReference Include="..\..\Hosts\Hosts\Hosts.csproj" />
+        <ProjectReference Include="..\..\Infrastructure\DataServices\DataServices.csproj" />
+        <ProjectReference Include="..\..\SharedKernel\SharedKernel\SharedKernel.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="appsettings.json">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="appsettings.IntegrationTest.json">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      </Content>
+    </ItemGroup>
+
+
+</Project>

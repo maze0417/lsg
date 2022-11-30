@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "Deployment": {
+      "commandName": "Project",
+      "commandLineArgs": "-configuration release -dockerbuild -UserPwd \"\" -action \"Integration\" -environment \"integration\" -component \"lsgapi+loggerwork+lsganchorconsole+lsgfrontend\" -agent TCAgent1 -version \"\""
+      //"commandLineArgs": "-configuration release -dockerbuild -UserPwd \"\" -action \"RunUnitTests\" -environment \"integration\" -component \"lsgapi+loggerwork+lsganchorconsole+lsgfrontend\" -agent TCAgent1 -version \"\""
+    }
+  }
+}

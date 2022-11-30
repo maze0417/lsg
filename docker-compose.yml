@@ -1,0 +1,60 @@
+version: '3.5'
+
+services:
+  lsgapi:
+    image: lsghost:${APP_ENV:-local}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    networks:
+      - internal
+    ports:
+      - 8001:80
+    entrypoint: [ "dotnet", "LSG.Hosts.GenericHost.dll","--site","LsgApi" ]
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${APP_ENV:-local}
+      ASPNETCORE_SERVERNAME: ${APP_SERVER:-local}
+      TZ: ${TIMEZONE:-Asia/Taipei}
+  loggerworker:
+    image: lsghost:${APP_ENV:-local}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 8003:80
+    depends_on:
+      - db
+      - redis
+      - nats
+    networks:
+      - internal
+    entrypoint: [ "dotnet", "LSG.Hosts.GenericHost.dll","--site","loggerworker" ]
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${APP_ENV:-local}
+      ASPNETCORE_SERVERNAME: ${APP_SERVER:-local}
+      TZ: ${TIMEZONE:-Asia/Taipei}
+  lsgfrontend:
+    image: lsghost:${APP_ENV:-local}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    
+    ports:
+      - 8002:80
+    networks:
+      - internal
+    entrypoint: [ "dotnet", "LSG.Hosts.GenericHost.dll","--site","lsgfrontend" ]
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${APP_ENV:-local}
+      ASPNETCORE_SERVERNAME: ${APP_SERVER:-local}
+      TZ: ${TIMEZONE:-Asia/Taipei}
+
+networks:
+  internal:
+    name: ${NETWORKS:-internal}
+    driver: bridge
+  
+

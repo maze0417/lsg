@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <AssemblyName>LSG.SharedKernel</AssemblyName>
+        <RootNamespace>LSG.SharedKernel</RootNamespace>
+    </PropertyGroup>
+
+
+    <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+
+    </ItemGroup>
+
+
+    <ItemGroup>
+        <PackageReference Include="MessagePack" Version="2.4.59" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="7.0.0" />
+        <PackageReference Include="NATS.Client" Version="1.0.2" />
+        <PackageReference Include="Serilog.AspNetCore" Version="6.0.1" />
+        <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="8.4.1" />
+        <PackageReference Include="StackExchange.Redis" Version="2.6.80" />
+        <PackageReference Include="System.Reactive.Linq" Version="4.4.1" />
+    </ItemGroup>
+
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\Core\Core\Core.csproj" />
+    </ItemGroup>
+
+</Project>

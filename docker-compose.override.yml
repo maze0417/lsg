@@ -1,0 +1,62 @@
+version: '3.5'
+
+services:
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:${ELK_VERSION:-8.3.2}
+    environment:
+      - discovery.type=single-node
+      - cluster.name=docker-cluster
+      - bootstrap.memory_lock=true
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - ELASTIC_USERNAME=root
+      - ELASTIC_PASSWORD=root
+      - xpack.security.enabled=false
+      - xpack.security.transport.ssl.enabled=false
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    networks:
+      - internal
+    restart: always
+  kibana:
+    image: docker.elastic.co/kibana/kibana:${ELK_VERSION:-8.3.2}
+    ports:
+      - "5601:5601"
+    restart: always
+    networks:
+      - internal
+    environment:
+      ELASTICSEARCH_HOSTS: http://elk:9200
+  #      I18N_LOCALE: zh-CN
+  nats:
+    container_name: nats
+    image: nats:latest
+    restart: always
+    networks:
+      - internal
+    ports:
+      - 4222:4222
+      - 8222:8222
+  redis:
+    image: redis:latest
+    restart: always
+    networks:
+      - internal
+    ports:
+      - 6379:6379
+  mssql:
+    image: "mcr.microsoft.com/mssql/server:2017-latest"
+    environment:
+      SA_PASSWORD: "5VckGdLyvC2zDK8e"
+      ACCEPT_EULA: "Y"
+      TZ: "Asia/Taipei"
+    #      MSSQL_COLLATION: "Chinese_PRC_CI_AS"
+    ports:
+      - 14333:1433
+    restart: always
+    networks:
+      - internal
+networks:
+  internal:
+    name: ${NETWORKS:-internal}
+    driver: bridge

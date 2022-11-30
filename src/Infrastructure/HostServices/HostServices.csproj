@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net7.0</TargetFramework>
+        <AssemblyName>LSG.Infrastructure.HostServices</AssemblyName>
+        <RootNamespace>LSG.Infrastructure.HostServices</RootNamespace>
+        
+    </PropertyGroup>
+
+
+    <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+
+
+    <ItemGroup>
+        <ProjectReference Include="..\DataServices\DataServices.csproj" />
+        <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
+    </ItemGroup>
+</Project>
